@@ -1,0 +1,20 @@
+﻿using System;
+using Microsoft.AspNetCore.Identity;
+
+
+namespace Bookss.Models
+{
+    
+    public class MyFavoriteBook
+    {
+        public int Id { get; set; }
+
+        
+        public string UserId { get; set; }
+        public virtual IdentityUser User { get; set; }
+
+        
+        public int BookId { get; set; }
+        public virtual Book Book { get; set; }
+    }
+}
