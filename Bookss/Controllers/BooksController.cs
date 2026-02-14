@@ -36,7 +36,7 @@ namespace Bookss.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Description,GenreId,AutorId")] Book book)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && book != null)
             {
                 _context.Books.Add(book);
                 await _context.SaveChangesAsync();
