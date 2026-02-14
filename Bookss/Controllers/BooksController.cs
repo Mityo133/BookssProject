@@ -37,6 +37,8 @@ namespace Bookss.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Description,GenreId,AuthorId,ImageUrl")] Book book)
         {
+            ModelState.Remove("Author");
+            ModelState.Remove("Genre");
             if (ModelState.IsValid)
             {
                 _context.Add(book);
@@ -71,6 +73,8 @@ namespace Bookss.Controllers
             if (id != book.Id)
                 return NotFound();
 
+            ModelState.Remove("Author");
+            ModelState.Remove("Genre");
             if (ModelState.IsValid)
             {
                 _context.Update(book);
