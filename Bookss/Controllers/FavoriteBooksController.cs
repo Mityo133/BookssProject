@@ -11,6 +11,7 @@ namespace Bookss.Controllers
     [Authorize]
     public class FavoriteBooksController : Controller
     {
+
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
 
@@ -21,6 +22,7 @@ namespace Bookss.Controllers
         }
 
         // GET: FavoriteBooks
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -35,9 +37,7 @@ namespace Bookss.Controllers
         // GET: FavoriteBooks/Create
         public IActionResult Create()
         {
-            var books = _context.Books.Select(b => new SelectListItem { Value = b.Id.ToString(), Text = b.Title }).ToList();
-            // Removed Users list as it's not needed
-            ViewData["Books"] = books;
+            Load();
             return View();
         }
 
@@ -61,8 +61,7 @@ namespace Bookss.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            var books = _context.Books.Select(b => new SelectListItem { Value = b.Id.ToString(), Text = b.Title });
-            ViewData["Books"] = books;
+            Load();
             return View(myFavoriteBook);
         }
 
@@ -192,6 +191,11 @@ namespace Bookss.Controllers
         private bool FavoriteBooksExists(int id)
         {
             return _context.MyFavoriteBooks.Any(e => e.Id == id);
+        }
+        private void Load()
+        {
+            ViewBag.BookId = _context.Books.Select(b => new SelectListItem { Value = b.Id.ToString(), Text = b.Title }).ToList();
+
         }
     }
 }
