@@ -18,34 +18,33 @@ namespace Bookss.Controllers
         // GET: Books
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Books.ToListAsync());
+            var books = _context.Books
+                .Include(b => b.Author)
+                .Include(b => b.Genre);
+
+            return View(await books.ToListAsync());
         }
 
         // GET: Books/Create
         public IActionResult Create()
         {
-            var authors = _context.Authors.Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name });
-            var genres = _context.Genre.Select(g => new SelectListItem { Value = g.Id.ToString(), Text = g.Name });
-            ViewData["Authors"] = authors;
-            ViewData["Genres"] = genres;
+            LoadDropdowns();
             return View();
         }
 
         // POST: Books/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,GenreId,AutorId")] Book book)
+        public async Task<IActionResult> Create([Bind("Id,Title,Description,GenreId,AuthorId,ImageUrl")] Book book)
         {
-            if (ModelState.IsValid && book != null)
+            if (ModelState.IsValid)
             {
-                _context.Books.Add(book);
+                _context.Add(book);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            var authors = _context.Authors.Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name });
-            var genres = _context.Genre.Select(g => new SelectListItem { Value = g.Id.ToString(), Text = g.Name });
-            ViewData["Authors"] = authors;
-            ViewData["Genres"] = genres;
+
+            LoadDropdowns();
             return View(book);
         }
 
@@ -53,55 +52,33 @@ namespace Bookss.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var book = await _context.Books.FindAsync(id);
+
             if (book == null)
-            {
                 return NotFound();
-            }
-            var authors = _context.Authors.Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name });
-            var genres = _context.Genre.Select(g => new SelectListItem { Value = g.Id.ToString(), Text = g.Name });
-            ViewData["Authors"] = authors;
-            ViewData["Genres"] = genres;
+
+            LoadDropdowns();
             return View(book);
         }
 
         // POST: Books/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,GenreId,AutorId")] Book book)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,GenreId,AuthorId,ImageUrl")] Book book)
         {
             if (id != book.Id)
-            {
                 return NotFound();
-            }
+
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(book);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!BookExists(book.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                _context.Update(book);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            var authors = _context.Authors.Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.Name });
-            var genres = _context.Genre.Select(g => new SelectListItem { Value = g.Id.ToString(), Text = g.Name });
-            ViewData["Authors"] = authors;
-            ViewData["Genres"] = genres;
+
+            LoadDropdowns();
             return View(book);
         }
 
@@ -109,15 +86,16 @@ namespace Bookss.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
-            var book = await _context.Books.FindAsync(id);
+            var book = await _context.Books
+                .Include(b => b.Author)
+                .Include(b => b.Genre)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
             if (book == null)
-            {
                 return NotFound();
-            }
+
             return View(book);
         }
 
@@ -132,9 +110,10 @@ namespace Bookss.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool BookExists(int id)
+        private void LoadDropdowns()
         {
-            return _context.Books.Any(e => e.Id == id);
+            ViewBag.AuthorId = new SelectList(_context.Authors, "Id", "Name");
+            ViewBag.GenreId = new SelectList(_context.Genre, "Id", "Name");
         }
     }
 }
