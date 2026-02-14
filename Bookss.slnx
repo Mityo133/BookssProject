@@ -1,3 +1,6 @@
 <Solution>
+  <Project Path="Books.Business/Books.Business.csproj" Id="42af91f7-141e-4ace-a0bd-8e1ad9991c5c" />
+  <Project Path="Books.Models/Books.Models.csproj" Id="8707dbfb-2dbc-4963-9885-623b732a1a6c" />
+  <Project Path="Bookss.Data/Bookss.Data.csproj" Id="30f553ff-6660-4c7d-a77a-7773008c2134" />
   <Project Path="Bookss/Bookss.csproj" />
 </Solution>

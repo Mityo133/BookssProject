@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="AutoMapper" Version="14.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.23" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.23" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.23" />
+	</ItemGroup>
+	
+  <ItemGroup>
+    <ProjectReference Include="..\Books.Models\Books.Models.csproj" />
+    <ProjectReference Include="..\Bookss.Data\Bookss.Data.csproj" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <Folder Include="Mappings\" />
+  </ItemGroup>
+
+</Project>

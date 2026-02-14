@@ -52,7 +52,7 @@ namespace Bookss.Controllers
         }
 
         // GET: MyFavoriteBook/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
@@ -74,7 +74,7 @@ namespace Bookss.Controllers
         // POST: MyFavoriteBook/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,BookId")] MyFavoriteBook myFavoriteBook)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,UserId,BookId")] MyFavoriteBook myFavoriteBook)
         {
             if (id != myFavoriteBook.Id)
             {
@@ -111,7 +111,7 @@ namespace Bookss.Controllers
         }
 
         // GET: MyFavoriteBook/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
             {
@@ -129,7 +129,7 @@ namespace Bookss.Controllers
         // POST: MyFavoriteBook/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var myFavoriteBook = await _context.MyFavoriteBooks.FindAsync(id);
             _context.MyFavoriteBooks.Remove(myFavoriteBook);
@@ -137,7 +137,7 @@ namespace Bookss.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool MyFavoriteBookExists(int id)
+        private bool MyFavoriteBookExists(Guid id)
         {
             return _context.MyFavoriteBooks.Any(e => e.Id == id);
         }

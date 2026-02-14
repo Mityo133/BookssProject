@@ -43,7 +43,7 @@ namespace Bookss.Controllers
         }
 
         // GET: BooksRatings/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
@@ -61,7 +61,7 @@ namespace Bookss.Controllers
         // POST: BooksRatings/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,BookId,UserId1,Rating,Text")] BooksRating booksRating)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,BookId,UserId1,Rating,Text")] BooksRating booksRating)
         {
             if (id != booksRating.Id)
             {
@@ -94,7 +94,7 @@ namespace Bookss.Controllers
         }
 
         // GET: BooksRatings/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
             {
@@ -112,7 +112,7 @@ namespace Bookss.Controllers
         // POST: BooksRatings/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var booksRating = await _context.BooksRating.FindAsync(id);
             _context.BooksRating.Remove(booksRating);
@@ -120,7 +120,7 @@ namespace Bookss.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool BooksRatingExists(int id)
+        private bool BooksRatingExists(Guid id)
         {
             return _context.BooksRating.Any(e => e.Id == id);
         }

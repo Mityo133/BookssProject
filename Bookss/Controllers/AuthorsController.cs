@@ -1,4 +1,5 @@
-﻿using Bookss.Data;
+﻿
+using Bookss.Data;
 using Bookss.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -41,7 +42,7 @@ namespace Bookss.Controllers
         }
 
         // GET: Authors/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
@@ -59,7 +60,7 @@ namespace Bookss.Controllers
         // POST: Authors/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Age")] Author author)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description,Age")] Author author)
         {
             if (id != author.Id)
             {
@@ -89,7 +90,7 @@ namespace Bookss.Controllers
         }
 
         // GET: Authors/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
             {
@@ -107,7 +108,7 @@ namespace Bookss.Controllers
         // POST: Authors/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var author = await _context.Authors.FindAsync(id);
             _context.Authors.Remove(author);
@@ -115,7 +116,7 @@ namespace Bookss.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AuthorExists(int id)
+        private bool AuthorExists(Guid id)
         {
             return _context.Authors.Any(e => e.Id == id);
         }

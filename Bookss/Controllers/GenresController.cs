@@ -41,7 +41,7 @@ namespace Bookss.Controllers
         }
 
         // GET: Genres/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
@@ -59,7 +59,7 @@ namespace Bookss.Controllers
         // POST: Genres/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description")] Genre genre)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Description")] Genre genre)
         {
             if (id != genre.Id)
             {
@@ -89,7 +89,7 @@ namespace Bookss.Controllers
         }
 
         // GET: Genres/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
             {
@@ -107,7 +107,7 @@ namespace Bookss.Controllers
         // POST: Genres/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var genre = await _context.Genre.FindAsync(id);
             _context.Genre.Remove(genre);
@@ -115,7 +115,7 @@ namespace Bookss.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool GenreExists(int id)
+        private bool GenreExists(Guid id)
         {
             return _context.Genre.Any(e => e.Id == id);
         }

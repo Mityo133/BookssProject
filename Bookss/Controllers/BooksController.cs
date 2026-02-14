@@ -51,7 +51,7 @@ namespace Bookss.Controllers
         }
 
         // GET: Books/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
                 return NotFound();
@@ -68,7 +68,7 @@ namespace Bookss.Controllers
         // POST: Books/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,GenreId,AuthorId,ImageUrl")] Book book)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Title,Description,GenreId,AuthorId,ImageUrl")] Book book)
         {
             if (id != book.Id)
                 return NotFound();
@@ -87,7 +87,7 @@ namespace Bookss.Controllers
         }
 
         // GET: Books/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
                 return NotFound();
@@ -106,7 +106,7 @@ namespace Bookss.Controllers
         // POST: Books/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             var book = await _context.Books.FindAsync(id);
             _context.Books.Remove(book);
