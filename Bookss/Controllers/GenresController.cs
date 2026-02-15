@@ -2,7 +2,10 @@
 using Bookss.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Bookss.Models.Entities;
 namespace Bookss.Controllers
 {
     public class GenresController : Controller

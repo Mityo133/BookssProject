@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Bookss.Models
+namespace Bookss.Models.Entities
 {
     public class Author
     {

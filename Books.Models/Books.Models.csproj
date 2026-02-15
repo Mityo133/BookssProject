@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="ViewModels\Authors\AuthorCreateOrEditViewModel.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="ViewModels\Authors\AuthorCreateOrEditViewModel.cs" />
   </ItemGroup>
 	<ItemGroup>

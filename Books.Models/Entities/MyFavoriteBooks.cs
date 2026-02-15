@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 
 
-namespace Bookss.Models
+namespace Bookss.Models.Entities
 {
     
     public class MyFavoriteBook

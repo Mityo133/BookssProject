@@ -1,9 +1,12 @@
 ﻿using Bookss.Data;
 using Bookss.Models;
+using Bookss.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 namespace Bookss.Controllers
 {
     public class BooksController : Controller

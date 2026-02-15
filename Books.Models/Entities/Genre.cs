@@ -1,4 +1,4 @@
-﻿namespace Bookss.Models
+﻿namespace Bookss.Models.Entities
 {
     public class Genre
     {

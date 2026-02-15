@@ -16,9 +16,5 @@
     <ProjectReference Include="..\Books.Models\Books.Models.csproj" />
     <ProjectReference Include="..\Bookss.Data\Bookss.Data.csproj" />
   </ItemGroup>
-	
-  <ItemGroup>
-    <Folder Include="Mappings\" />
-  </ItemGroup>
 
 </Project>
