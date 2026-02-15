@@ -53,7 +53,7 @@ namespace Bookss.Controllers
 
             ModelState.Remove("User");
             ModelState.Remove("Book");
-            ModelState.Remove("UserId"); // Ensure UserId is not validated from binder if it was present
+            ModelState.Remove("UserId");
 
             if (ModelState.IsValid)
             {
@@ -79,7 +79,7 @@ namespace Bookss.Controllers
                 return NotFound();
             }
 
-            // Ensure user owns this record
+     
             var user = await _userManager.GetUserAsync(User);
             if (user == null || myFavoriteBook.UserId != user.Id)
             {
