@@ -1,4 +1,5 @@
-﻿using Bookss.Data;
+﻿using System.Threading.Tasks;
+using Bookss.Data;
 using Bookss.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -85,7 +86,16 @@ namespace Bookss.Controllers
             LoadDropdowns();
             return View(book);
         }
-
+        [HttpGet]
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+                return NotFound();
+            var book = await _context.Books.Where(b=> b.Id == id).Include(b=> b.Author).Include(b=> b.Genre).FirstOrDefaultAsync();
+            if (book == null)
+                return NotFound();
+            return View(book);
+        }
         // GET: Books/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {

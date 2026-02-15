@@ -9,50 +9,18 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImageUrl)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Genre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Author)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td> <img src= $"{item.ImageUrl}") />
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Genre.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Author.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="grid grid-cols-4 grid-rows-3">
+    @foreach (var item in Model)
+    {
+        <div class="flex flex-col items-center border border-x-blue-950 rounded-2xl bg-blue-950 w-52">
+            <img src="@item.ImageUrl" alt="@item.Title" class="w-full h-36 rounded-lg" />
+            <div class="">
+                <h3 class="text-white text-sm">@item.Title</h3>
+                <h3 class="text-white text-sm">@item.Author.Name</h3>
+                <h3 class="text-white text-sm">@item.Genre.Name</h3>
+                <a asp-action="Details" asp-route-id="@item.Id"
+                    class="btn btn-primary hover:bg-blue-500 hover:text-white border border-x-blue-950">Details</a>
+            </div>
+        </div>
+    }
+</div>

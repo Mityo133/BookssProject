@@ -1,14 +1,42 @@
 ﻿@{
   ViewData["Title"] = "Home Page";
 }
-<div class="h-auto w-auto bg-linear-to-r from-cyan-300 to-purple-800">
- <div>
-  <h1>Homeww</h1>
-  <div class="grid grid-cols-3 grid-rows-3 ">
-    <img src="/images/littlen.jpg" class="w-2 h-2 row-span-2 col-span-2" />
-  <img src="/images/book.jpg" class="w-2 h-2 rows-span-1 col-span-1" />
-  <img src="images/book1.jpg" class="w-2 h-2 rows-span-1 col-span-1" />
+<div class="relative isolate px-6 pt-14 lg:px-8">
+  <div class="mx-auto max-w-7xl py-12 sm:py-24 lg:py-32">
+    <div class="text-center mb-16">
+      <h1
+        class="text-4xl font-bold tracking-tight sm:text-6xl bg-clip-text text-transparent bg-linear-to-r from-pink-500 via-purple-500 to-indigo-500">
+        Welcome to our book store
+      </h1>
+      <p class="mt-6 text-lg leading-8 text-gray-300">
+        Discover your next favorite story in our curated collection.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
+      <div
+        class="relative group aspect-3/4 overflow-hidden rounded-2xl bg-gray-800 shadow-xl ring-1 ring-white/10 transform transition duration-300 hover:scale-[1.02]">
+        <img src="/images/littlen.jpg" alt="Little Women"
+          class="absolute inset-0 h-full w-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
+        <div class="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/80 via-black/40 to-transparent p-6">
+        </div>
+      </div>
+
+      <div
+        class="relative group aspect-3/4 overflow-hidden rounded-2xl bg-gray-800 shadow-xl ring-1 ring-white/10 transform transition duration-300 hover:scale-[1.02] lg:mt-12">
+        <img src="/images/book.jpg" alt="Featured Book"
+          class="absolute inset-0 h-full w-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
+        <div class="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/80 via-black/40 to-transparent p-6">
+        </div>
+      </div>
+
+      <div
+        class="relative group aspect-3/4 overflow-hidden rounded-2xl bg-gray-800 shadow-xl ring-1 ring-white/10 transform transition duration-300 hover:scale-[1.02]">
+        <img src="/images/book1.jpg" alt="New Arrival"
+          class="absolute inset-0 h-full w-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
+        <div class="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/80 via-black/40 to-transparent p-6">
+        </div>
+      </div>
+    </div>
   </div>
-  </div>
- </div>
 </div>

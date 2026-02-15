@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,18 +10,29 @@
     <link rel="stylesheet" href="~/Bookss.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/output.css" asp-append-version="true" />
 </head>
-<body>
+<style>
+    body {
+        background-color: #0f172a;
+    }
+</style>
+
+<body class="">
     <header>
-        <nav class="bg-white border-b border-gray-200">
-            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <nav id="navbar" class="fixed top-0 left-0 w-full z-50 
+            transition-all duration-300 ease-in-out 
+            bg-transparent p-2">
+            <div class="mx-auto max-w-7xl px-4 ">
                 <div class="flex h-16 justify-between">
                     <div class="flex">
                         <div class="flex shrink-0 items-center">
-                            <a class="text-xl font-bold text-indigo-600" asp-area="" asp-controller="Home" asp-action="Index">Bookss</a>
+                            <a class="text-5 font-bold text-white hover:text-gray-900 hover:bg-white transition-colors"
+                                asp-area="" asp-controller="Home" asp-action="Index">Bookss</a>
                         </div>
-                        <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-                            <a class="inline-flex items-center border-b-2 border-indigo-500 px-1 pt-1 text-sm font-medium text-gray-900" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                            <a class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        <div class="hidden sm:ml-6 sm:flex sm:space-x-8 items-center">
+                            <a class="text-5 font-medium text-white hover:text-gray-900 hover:bg-white transition-colors p-1"
+                                asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="text-5 font-medium text-white hover:text-gray-900 hover:bg-white transition-colors p-1"
+                                asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </div>
                     </div>
                     <div class="hidden sm:ml-6 sm:flex sm:items-center">
@@ -28,12 +40,16 @@
                     </div>
                     <div class="-mr-2 flex items-center sm:hidden">
                         <!-- Mobile menu button -->
-                        <button type="button" class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <button type="button"
+                            class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+                            aria-controls="mobile-menu" aria-expanded="false">
                             <span class="absolute -inset-0.5"></span>
                             <span class="sr-only">Open main menu</span>
                             <!-- Icon when menu is closed. -->
-                            <svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                            <svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                             </svg>
                         </button>
                     </div>
@@ -43,24 +59,27 @@
             <!-- Mobile menu, show/hide based on menu state. -->
             <div class="sm:hidden" id="mobile-menu">
                 <div class="space-y-1 pb-3 pt-2">
-                    <a class="block border-l-4 border-indigo-500 bg-indigo-50 py-2 pl-3 pr-4 text-base font-medium text-indigo-700" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                    <a class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    <a class="text-gray-900 hover:bg-white hover:text-gray-50" asp-area="" asp-controller="Home"
+                        asp-action="Index">Home</a>
+                    <a class="text-gray-900 hover:bg-white hover:text-gray-50" asp-area="" asp-controller="Home"
+                        asp-action="Privacy">Privacy</a>
                 </div>
-                <div class="border-t border-gray-200 pb-3 pt-4">
-                     <partial name="_LoginPartial" />
+                <div class="text-gray-900 hover:bg-white hover:text-gray-50">
+                    <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="">
+    <div class="container min-h-screen">
+        <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - Bookss - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="border-t border-white/10 footer text-gray-400 bg-stone-950">
+        <div class="container text-center py-4">
+            &copy; 2026 - Bookss - <a class="text-gray-900 hover:bg-white hover:text-gray-50" asp-area=""
+                asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -68,5 +87,29 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+<script>
+    const navbar = document.getElementById("navbar");
+
+    window.addEventListener("scroll", function () {
+        if (window.scrollY > 50) {
+            navbar.classList.add(
+                "backdrop-blur-md",
+                "bg-stone-900/70",
+                "shadow-lg",
+                "py-2"
+            );
+            navbar.classList.remove("py-4");
+        } else {
+            navbar.classList.remove(
+                "backdrop-blur-md",
+                "bg-stone-900/70",
+                "shadow-lg",
+                "py-2"
+            );
+            navbar.classList.add("py-4");
+        }
+    });
+</script>
+
 </html>
 

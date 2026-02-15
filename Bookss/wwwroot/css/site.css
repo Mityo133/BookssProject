@@ -20,3 +20,17 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/* Custom Styles for Home Page */
+.home-container {
+  background: linear-gradient(to right, #67e8f9, #6b21a8); /* cyan-300 to purple-800 */
+  min-height: 100vh; /* Ensure full height */
+  padding: 20px;
+}
+
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 200px); /* 200px per row */
+  gap: 1rem;
+}
