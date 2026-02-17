@@ -33,6 +33,15 @@
                                 asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                             <a class="text-xl font-medium text-white hover:text-gray-900! hover:bg-cyan-500 transition-colors p-1 no-underline!"
                                 asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            @if(User.Identity.IsAuthenticated){
+                            <a class="text-xl font-medium text-white hover:text-gray-900! hover:bg-cyan-500 transition-colors p-1 no-underline!"
+                                asp-area="" asp-controller="FavoriteBooks" asp-action="Index">Favorite Books</a>
+                            }
+                            <a class="text-xl font-medium text-white hover:text-gray-900! hover:bg-cyan-500 transition-colors p-1 no-underline!"
+                                asp-area="" asp-controller="Books" asp-action="Index">Books</a>
+                            <a class="text-xl font-medium text-white hover:text-gray-900! hover:bg-cyan-500 transition-colors p-1 no-underline!"
+                                asp-area="" asp-controller="Genres" asp-action="Index">Genres</a>
+
                         </div>
                     </div>
                     <div class="hidden sm:ml-6 sm:flex sm:items-center">
@@ -103,7 +112,6 @@
         } else {
             navbar.classList.remove(
                 "backdrop-blur-xl",
-                "bg-slate-950/90",
                 "border-b",
                 "border-white/10",
                 "shadow-2xl"

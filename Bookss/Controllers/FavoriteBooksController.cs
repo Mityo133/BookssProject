@@ -30,8 +30,40 @@ namespace Bookss.Controllers
 
             return View(await _context.MyFavoriteBooks
                 .Include(f => f.Book)
+                    .ThenInclude(b => b.Author)
+                .Include(f => f.Book)
+                    .ThenInclude(b => b.Genre)
                 .Where(f => f.UserId == user.Id)
                 .ToListAsync());
+        }
+
+        // POST: FavoriteBooks/AddToFavorites
+        //Allow only authenticated users
+        //It will allow the to add their favorite books!
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddToFavorites(int bookId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Challenge();
+
+            // Check if already in favorites
+            var existingFavorite = await _context.MyFavoriteBooks
+                .FirstOrDefaultAsync(f => f.BookId == bookId && f.UserId == user.Id);
+
+            if (existingFavorite == null)
+            {
+                var myFavoriteBook = new MyFavoriteBook
+                {
+                    BookId = bookId,
+                    UserId = user.Id
+                };
+
+                _context.MyFavoriteBooks.Add(myFavoriteBook);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Details", "Books", new { id = bookId });
         }
 
         // GET: FavoriteBooks/Create
@@ -64,8 +96,26 @@ namespace Bookss.Controllers
             Load();
             return View(myFavoriteBook);
         }
+        //Remove from favorites
+        [Authorize]
+        public async Task<IActionResult> RemoveFromFavorites(int bookId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Challenge();
 
+            var favorite = await _context.MyFavoriteBooks
+                .FirstOrDefaultAsync(f => f.BookId == bookId && f.UserId == user.Id);
+
+            if (favorite != null)
+            {
+                _context.MyFavoriteBooks.Remove(favorite);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Index");
+        }
         // GET: FavoriteBooks/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -79,7 +129,7 @@ namespace Bookss.Controllers
                 return NotFound();
             }
 
-     
+
             var user = await _userManager.GetUserAsync(User);
             if (user == null || myFavoriteBook.UserId != user.Id)
             {
@@ -94,6 +144,7 @@ namespace Bookss.Controllers
         // POST: FavoriteBooks/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,BookId")] MyFavoriteBook myFavoriteBook)
         {
             if (id != myFavoriteBook.Id)
@@ -143,6 +194,7 @@ namespace Bookss.Controllers
         }
 
         // GET: FavoriteBooks/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -170,6 +222,7 @@ namespace Bookss.Controllers
         // POST: FavoriteBooks/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var myFavoriteBook = await _context.MyFavoriteBooks.FindAsync(id);

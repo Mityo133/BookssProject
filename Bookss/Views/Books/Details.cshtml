@@ -6,14 +6,32 @@
 
 <h1>Details</h1>
 
-<div class="grid-cols-2 grid-row    s-3">
+<div class="grid-cols-2 grid-rows-3">
     <img src="@Model.ImageUrl" alt="@Model.Title" class="w-80 row-span-2 h-96 rounded-lg" />
     <div class="">
         <h3 class="text-black text-sm">@Model.Title</h3>
         <h3 class="text-black text-sm">@Model.Author.Name</h3>
         <h3 class="text-black text-sm">@Model.Genre.Name</h3>
-        <a asp-action="Details" asp-route-id="@Model.Id"
-            class="btn btn-primary hover:bg-blue-500 hover:text-white border border-x-blue-950">Details</a>
+        @if (User.Identity.IsAuthenticated)
+        {
+                <form asp-controller="FavoriteBooks" asp-action="AddToFavorites" method="post" style="display: inline;">
+                    <input type="hidden" name="bookId" value="@Model.Id" />
+                @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-success hover:bg-green-600 hover:text-white border  text-black bg-green-400 border-green-700 ml-2">
+                        Add to Favorites
+                    </button>
+                </form>
+        }
+        @if (User.Identity.IsAuthenticated)
+        {
+            <form asp-controller="FavoriteBooks" asp-action="RemoveFromFavorites" method="post" style="display: inline;">
+                <input type="hidden" name="bookId" value="@Model.Id" />
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-danger hover:bg-red-900 hover:text-white text-black bg-red-400 border border-red-700 ml-2">
+                    Remove from Favorites
+                </button>
+            </form>
+        }
     </div>
 </div>
 <div>

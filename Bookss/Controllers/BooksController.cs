@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
+using System.Threading.Tasks;
 using Bookss.Data;
 using Bookss.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,7 @@ namespace Bookss.Controllers
         }
 
         // GET: Books/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             LoadDropdowns();
@@ -36,6 +38,7 @@ namespace Bookss.Controllers
         // POST: Books/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Id,Title,Description,GenreId,AuthorId,ImageUrl")] Book book)
         {
             ModelState.Remove("Author");
@@ -52,6 +55,7 @@ namespace Bookss.Controllers
         }
 
         // GET: Books/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -69,6 +73,7 @@ namespace Bookss.Controllers
         // POST: Books/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,GenreId,AuthorId,ImageUrl")] Book book)
         {
             if (id != book.Id)
@@ -87,6 +92,7 @@ namespace Bookss.Controllers
             return View(book);
         }
         [HttpGet]
+        
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -97,6 +103,7 @@ namespace Bookss.Controllers
             return View(book);
         }
         // GET: Books/Delete/5
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -129,5 +136,6 @@ namespace Bookss.Controllers
             ViewBag.AuthorId = new SelectList(_context.Authors, "Id", "Name");
             ViewBag.GenreId = new SelectList(_context.Genre, "Id", "Name");
         }
+        
     }
 }

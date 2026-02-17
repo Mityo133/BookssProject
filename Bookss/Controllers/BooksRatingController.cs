@@ -31,7 +31,6 @@ namespace Bookss.Controllers
                 .Where(r => r.UserId == user.Id)
                 .ToListAsync());
         }
-
         // GET: BooksRatings/Create
         public IActionResult Create()
         {

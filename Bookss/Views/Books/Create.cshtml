@@ -4,39 +4,45 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>Book</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+<div class="flex items-center justify-center min-h-screen bg-linear-to-br from-gray-700 via-gray-800 to-gray-900 p-4">
+    <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md mx-auto transition-all duration-500 transform hover:shadow-2xl hover:-translate-y-2">
+        <h1 class="text-2xl font-bold mb-4 text-center">Create Book</h1>
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
+            <div class="mb-6">
+                <label asp-for="Title" class="block text-gray-700 font-medium mb-2 text-center">Title:</label>
+                <input type="text" id="Title" asp-for="Title"
+                    class="form-control shadow hover:shadow-emerald-400 p-4 w-full focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent rounded-lg transition-all duration-300" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+            <div class="mb-6">
+                <label asp-for="Description"
+                    class="block text-gray-700 font-medium mb-2 text-center">Description:</label>
+                <textarea id="Description" asp-for="Description"
+                    class="form-control shadow hover:shadow-indigo-500 p-4 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent rounded-lg transition-all duration-300"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="ImageUrl" class="control-label"></label>
-                <input asp-for="ImageUrl" class="form-control" />
+            <div class="mb-6">
+                <label for="ImageUrl" class="block text-gray-700 font-medium mb-2 text-center">Image URL:</label>
+                <input type="url" id="ImageUrl" asp-for="ImageUrl"
+                    class="form-control shadow hover:shadow-pink-500 p-4 w-full focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent rounded-lg transition-all duration-300" />
                 <span asp-validation-for="ImageUrl" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="GenreId" class="control-label"></label>
-                <select asp-for="GenreId" class ="form-control" asp-items="ViewBag.GenreId"></select>
+            <div class="mb-6">
+                <label for="GenreId" class="block text-gray-700 font-medium mb-2 text-center">Genre:</label>
+                <select asp-for="GenreId"
+                    class="form-control shadow hover:shadow-purple-500 p-4 w-full focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent rounded-lg transition-all duration-300"
+                    asp-items="ViewBag.GenreId"></select>
             </div>
-            <div class="form-group">
-                <label asp-for="AuthorId" class="control-label"></label>
-                <select asp-for="AuthorId" class ="form-control" asp-items="ViewBag.AuthorId"></select>
+            <div class="mb-6">
+                <label for="AuthorId" class="block text-gray-700 font-medium mb-2 text-center">Author:</label>
+                <select asp-for="AuthorId"
+                    class="form-control shadow hover:shadow-orange-500 p-4 w-full focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent rounded-lg transition-all duration-300"
+                    asp-items="ViewBag.AuthorId"></select>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div class="flex justify-end mt-8">
+                <input type="submit" value="Create Book"
+                    class="btn btn-primary shadow-lg hover:shadow-cyan-400 p-4 w-full text-white font-bold rounded-lg bg-linear-to-r from-cyan-500 to-blue-600 border-none transform hover:scale-105 transition-all duration-300 cursor-pointer" />
             </div>
         </form>
     </div>
@@ -47,5 +53,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

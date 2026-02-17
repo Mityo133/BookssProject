@@ -5,16 +5,21 @@
 @if (SignInManager.IsSignedIn(User))
 {
     <div class="flex items-center space-x-4">
-        <a class="text-sm font-medium text-slate-300 hover:text-white transition-colors" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
-        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button type="submit" class="rounded-lg bg-cyan-600 px-4 py-2 text-sm font-bold text-white shadow-lg shadow-cyan-900/20 hover:bg-cyan-500 transition-all duration-200">Logout</button>
+        <a class="text-sm font-medium text-slate-300 hover:text-white transition-colors" asp-area="Identity"
+            asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
+        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout"
+            asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+            <button type="submit"
+                class="rounded-lg bg-cyan-600 px-4 py-2 text-sm font-bold text-white shadow-lg shadow-cyan-900/20 hover:bg-cyan-500 transition-all duration-200">Logout</button>
         </form>
     </div>
 }
 else
 {
     <div class="flex items-center space-x-4">
-        <a class="text-sm font-medium text-slate-300 hover:text-white transition-colors no-underline!" asp-area="Identity" asp-page="/Account/Register">Register</a>
-        <a class="text-sm font-medium text-white bg-white/10 px-4 py-2 rounded-lg hover:bg-white/20 transition-all no-underline!" asp-area="Identity" asp-page="/Account/Login">Log in</a>
+        <a class="text-sm font-medium text-slate-300 hover:text-white hover:bg-cyan-950 transition-colors no-underline!"
+            asp-area="Identity" asp-page="/Account/Register">Register</a>
+        <a class="text-sm font-medium text-slate-300 px-4 py-2 rounded-lg hover:bg-cyan-950 transition-all no-underline!"
+            asp-area="Identity" asp-page="/Account/Login">Log in</a>
     </div>
 }
