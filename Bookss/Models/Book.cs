@@ -4,6 +4,11 @@ namespace Bookss.Models
 {
     public class Book
     {
+        public Book()
+        {
+            BooksRating = new HashSet<BooksRating>();
+        }
+
         [Key]
         public int Id { get; set; }
         public string Title { get; set; }
@@ -13,5 +18,6 @@ namespace Bookss.Models
         public virtual Genre Genre { get; set; }
         public int AuthorId { get; set; }
         public virtual Author Author { get; set; }
+        public virtual ICollection<BooksRating> BooksRating { get; set; }
     }
 }

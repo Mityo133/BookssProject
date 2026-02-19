@@ -2,6 +2,7 @@
 using Bookss.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Bookss.Controllers
 {
@@ -17,10 +18,35 @@ namespace Bookss.Controllers
         // GET: Genres
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Genre.ToListAsync());
+            return View(await _context.Genre
+                .Include(g => g.Books)
+                    .ThenInclude(b => b.Author)
+                .ToListAsync());
+        }
+
+        // GET: Genres/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var genre = await _context.Genre
+                .Include(g => g.Books)
+                    .ThenInclude(b => b.Author)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (genre == null)
+            {
+                return NotFound();
+            }
+
+            return View(genre);
         }
 
         // GET: Genres/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -29,6 +55,7 @@ namespace Bookss.Controllers
         // POST: Genres/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Id,Name,Description")] Genre genre)
         {
             if (ModelState.IsValid)
@@ -41,6 +68,7 @@ namespace Bookss.Controllers
         }
 
         // GET: Genres/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -59,6 +87,7 @@ namespace Bookss.Controllers
         // POST: Genres/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description")] Genre genre)
         {
             if (id != genre.Id)
@@ -89,6 +118,7 @@ namespace Bookss.Controllers
         }
 
         // GET: Genres/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -107,6 +137,7 @@ namespace Bookss.Controllers
         // POST: Genres/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var genre = await _context.Genre.FindAsync(id);

@@ -32,10 +32,15 @@ namespace Bookss.Controllers
                 .ToListAsync());
         }
         // GET: BooksRatings/Create
-        public IActionResult Create()
+        public IActionResult Create(int? bookId)
         {
-            Load();
-            return View();
+            Load(bookId);
+            var model = new BooksRating();
+            if (bookId.HasValue)
+            {
+                model.BookId = bookId.Value;
+            }
+            return View(model);
         }
 
         // POST: BooksRatings/Create
@@ -56,9 +61,11 @@ namespace Bookss.Controllers
             {
                 _context.BooksRating.Add(booksRating);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                // Redirect back to the book's details page if we came from there
+                return RedirectToAction("Details", "Books", new { id = booksRating.BookId });
             }
-            Load();
+            Load(booksRating.BookId);
             return View(booksRating);
         }
 
@@ -82,7 +89,7 @@ namespace Bookss.Controllers
                 return NotFound();
             }
 
-            Load();
+            Load(booksRating.BookId);
             return View(booksRating);
         }
 
@@ -129,9 +136,9 @@ namespace Bookss.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Books", new { id = booksRating.BookId });
             }
-            Load();
+            Load(booksRating.BookId);
             return View(booksRating);
         }
 
@@ -174,10 +181,17 @@ namespace Bookss.Controllers
                 return NotFound();
             }
 
+            int? bookId = booksRating?.BookId;
+
             if (booksRating != null)
             {
                 _context.BooksRating.Remove(booksRating);
                 await _context.SaveChangesAsync();
+            }
+
+            if (bookId.HasValue)
+            {
+                return RedirectToAction("Details", "Books", new { id = bookId });
             }
             return RedirectToAction(nameof(Index));
         }
@@ -187,13 +201,16 @@ namespace Bookss.Controllers
             return _context.BooksRating.Any(e => e.Id == id);
         }
 
-        private void Load()
+        private void Load(int? selectedBookId = null)
         {
-            ViewBag.BookId = _context.Books.Select(b => new SelectListItem
+            var books = _context.Books.Select(b => new SelectListItem
             {
                 Value = b.Id.ToString(),
-                Text = b.Title
+                Text = b.Title,
+                Selected = selectedBookId.HasValue && b.Id == selectedBookId.Value
             }).ToList();
+
+            ViewBag.BookId = books;
         }
     }
 }

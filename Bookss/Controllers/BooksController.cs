@@ -18,12 +18,21 @@ namespace Bookss.Controllers
         }
 
         // GET: Books
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
             var books = _context.Books
                 .Include(b => b.Author)
-                .Include(b => b.Genre);
+                .Include(b => b.Genre)
+                .AsQueryable();
 
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                books = books.Where(s => s.Title.Contains(searchString)
+                                       || s.Author.Name.Contains(searchString)
+                                       || s.Genre.Name.Contains(searchString));
+            }
+
+            ViewData["CurrentFilter"] = searchString;
             return View(await books.ToListAsync());
         }
 
@@ -92,18 +101,26 @@ namespace Bookss.Controllers
             return View(book);
         }
         [HttpGet]
-        
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
                 return NotFound();
-            var book = await _context.Books.Where(b=> b.Id == id).Include(b=> b.Author).Include(b=> b.Genre).FirstOrDefaultAsync();
+
+            var book = await _context.Books
+                .Include(b => b.Author)
+                .Include(b => b.Genre)
+                .Include(b => b.BooksRating)
+                    .ThenInclude(r => r.User)
+                .FirstOrDefaultAsync(b => b.Id == id);
+
             if (book == null)
                 return NotFound();
+
             return View(book);
         }
         // GET: Books/Delete/5
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -136,6 +153,6 @@ namespace Bookss.Controllers
             ViewBag.AuthorId = new SelectList(_context.Authors, "Id", "Name");
             ViewBag.GenreId = new SelectList(_context.Genre, "Id", "Name");
         }
-        
+
     }
 }

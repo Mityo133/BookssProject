@@ -1,28 +1,127 @@
 ﻿@model IEnumerable<Bookss.Models.Genre>
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Genres";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-@foreach(var item in Model){
-    <div>
-        <h3>@item.Name</h3>
-        @foreach(var book in item.Books){
-              <div class="flex flex-col items-center border border-x-blue-950 rounded-2xl bg-blue-950 w-52">
-            <img src="@book.ImageUrl" alt="@book.Title" class="w-full h-36 rounded-lg" />
-            <div class="">
-                <h3 class="text-white text-sm">@book.Title</h3>
-                <h3 class="text-white text-sm">@book.Author.Name</h3>
-                <a asp-action="Details" asp-route-id="@book.Id"
-                    class="btn btn-primary hover:bg-blue-500 hover:text-white border border-x-blue-950">Details</a>
-            </div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-12 gap-6">
+        <div>
+            <h1 class="text-4xl font-bold text-white tracking-tight">Explore by <span class="text-indigo-400">Genre</span></h1>
+            <p class="mt-2 text-gray-400">Discover your next favorite story across different categories.</p>
         </div>
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Create" class="inline-flex items-center px-4 py-2.5 border border-transparent rounded-lg shadow-sm text-sm font-medium text-slate-950 bg-indigo-400 hover:bg-indigo-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all whitespace-nowrap">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Add New Genre
+            </a>
         }
     </div>
-}
 
+    <div class="space-y-24">
+        @foreach (var genre in Model)
+        {
+            <section class="relative">
+                <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 border-b border-white/5 pb-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white flex flex-wrap items-center gap-3">
+                            <a asp-action="Details" asp-route-id="@genre.Id" class="hover:text-indigo-400 transition-colors">@genre.Name</a>
+                            <span class="px-3 py-1 text-xs font-medium bg-indigo-500/10 text-indigo-400 rounded-full border border-indigo-500/20 whitespace-nowrap">
+                                @(genre.Books?.Count() ?? 0) @(genre.Books?.Count() == 1 ? "Book" : "Books")
+                            </span>
+                        </h2>
+                        @if (!string.IsNullOrEmpty(genre.Description))
+                        {
+                            <p class="text-gray-500 text-sm mt-3 max-w-3xl">@genre.Description</p>
+                        }
+                    </div>
+                    <div class="flex gap-4">
+                         @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@genre.Id" class="text-sm font-medium text-gray-400 hover:text-indigo-400 transition-colors flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                                Edit
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@genre.Id" class="text-sm font-medium text-red-400/70 hover:text-red-400 transition-colors flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                                Delete
+                            </a>
+                        }
+                    </div>
+                </div>
+
+                <div class="relative">
+                    @if (genre.Books != null && genre.Books.Any())
+                    {
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-8">
+                            @foreach (var book in genre.Books.Take(6))
+                            {
+                                <div class="group relative bg-slate-900/40 backdrop-blur-md border border-white/5 rounded-2xl overflow-hidden hover:border-indigo-500/50 transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-500/10 hover:-translate-y-2">
+                                    <div class="aspect-2/3 w-full overflow-hidden bg-slate-800 relative">
+                                        @if (!string.IsNullOrEmpty(book.ImageUrl))
+                                        {
+                                            <img src="@book.ImageUrl" 
+                                                 alt="@book.Title" 
+                                                 class="h-full w-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                                                 loading="lazy" />
+                                        }
+                                        else
+                                        {
+                                            <div class="flex items-center justify-center h-full bg-linear-to-br from-slate-800 to-slate-900">
+                                                <span class="text-slate-600 text-3xl font-bold">@book.Title?[0]</span>
+                                            </div>
+                                        }
+                                        
+                                        <!-- Entire card link -->
+                                        <a asp-controller="Books" asp-action="Details" asp-route-id="@book.Id" class="absolute inset-0 z-10">
+                                            <span class="sr-only">View Details for @book.Title</span>
+                                        </a>
+
+                                        <!-- Hover Action Overlay (Button style) -->
+                                        <div class="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 z-20 pointer-events-none">
+                                            <div class="w-full bg-white text-slate-950 text-center py-2.5 rounded-xl font-bold text-xs transform transition-transform translate-y-4 group-hover:translate-y-0 shadow-xl">
+                                                View Details
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="p-4">
+                                        <h3 class="text-sm font-bold text-white group-hover:text-indigo-400 transition-colors truncate">@book.Title</h3>
+                                        <p class="text-xs text-gray-400 mt-1 truncate italic">by @(book.Author?.Name ?? "Unknown Author")</p>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        
+                        @if (genre.Books.Count() > 6)
+                        {
+                            <div class="mt-8 text-center">
+                                <a asp-action="Details" asp-route-id="@genre.Id" class="inline-flex items-center px-6 py-2 border border-white/10 rounded-full text-sm font-medium text-gray-400 hover:text-indigo-400 hover:border-indigo-400 transition-all group">
+                                    View all @(genre.Books.Count()) books in @genre.Name
+                                    <svg class="w-4 h-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="flex flex-col items-center justify-center py-16 border-2 border-dashed border-white/5 rounded-2xl bg-slate-900/20">
+                            <p class="text-gray-500 font-medium">No books in this genre yet.</p>
+                        </div>
+                    }
+                </div>
+            </section>
+        }
+    </div>
+</div>

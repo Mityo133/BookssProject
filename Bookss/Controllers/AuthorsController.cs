@@ -18,7 +18,9 @@ namespace Bookss.Controllers
         // GET: Authors
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Authors.ToListAsync());
+            return View(await _context.Authors
+                .Include(a => a.Books)
+                .ToListAsync());
         }
 
         // GET: Authors/Create
