@@ -2,7 +2,7 @@
 using Bookss.Models.Entities;
 using Books.Models.ViewModels.Authors;
 using Books.Services.Interfaces;
-using Books.Business.Repositories; // Увери се, че това е правилният namespace за IRepository
+using Books.Business.Repositories; 
 
 namespace Books.Services
 {
@@ -19,7 +19,7 @@ namespace Books.Services
 
         public async Task<IEnumerable<AuthorViewModel>> GetAllAuthorsAsync()
         {
-            // Използваме params за Include, за да преброим книгите в AutoMapper профила
+            
             var authors = await _authorRepository.GetAllAsync(a => a.Books);
             return _mapper.Map<IEnumerable<AuthorViewModel>>(authors);
         }
@@ -42,7 +42,7 @@ namespace Books.Services
         {
             var author = _mapper.Map<Author>(model);
 
-            // Ако Id не се генерира от базата (Guid се задава ръчно често)
+           
             if (author.Id == Guid.Empty)
             {
                 author.Id = Guid.NewGuid();
@@ -59,8 +59,7 @@ namespace Books.Services
             var author = await _authorRepository.GetByIdAsync(model.Id.Value);
             if (author != null)
             {
-                // AutoMapper прехвърля стойностите от ViewМодела към съществуващото ентити
-                _mapper.Map(model, author);
+               
 
                 _authorRepository.Update(author);
                 await _authorRepository.CommitAsync();
