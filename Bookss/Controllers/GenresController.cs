@@ -16,11 +16,35 @@ namespace Bookss.Controllers
         }
 
         // GET: Genres
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
-            return View(await _context.Genre
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["CurrentFilter"] = searchString;
+
+            var genres = from g in _context.Genre
+                         select g;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                genres = genres.Where(g => g.Name.Contains(searchString)
+                                       || g.Description.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    genres = genres.OrderByDescending(g => g.Name);
+                    break;
+                default:
+                    genres = genres.OrderBy(g => g.Name);
+                    break;
+            }
+
+            return View(await genres
                 .Include(g => g.Books)
                     .ThenInclude(b => b.Author)
+                .AsNoTracking()
                 .ToListAsync());
         }
 

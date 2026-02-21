@@ -4,45 +4,79 @@
     ViewData["Title"] = "Create";
 }
 
-<div class="flex items-center justify-center min-h-screen bg-linear-to-br from-gray-700 via-gray-800 to-gray-900 p-4">
-    <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md mx-auto transition-all duration-500 transform hover:shadow-2xl hover:-translate-y-2">
-        <h1 class="text-2xl font-bold mb-4 text-center">Create Book</h1>
+<div class="flex items-center justify-center min-h-screen p-4 py-24">
+    <div
+        class="bg-slate-900/40 backdrop-blur-md border border-white/5 rounded-3xl shadow-2xl p-8 md:p-12 w-full max-w-2xl mx-auto">
+        <div class="text-center mb-10">
+            <h1 class="text-3xl font-bold text-white tracking-tight">Add New <span class="text-indigo-400">Book</span>
+            </h1>
+            <p class="mt-2 text-gray-400">Expand the library with a new edition.</p>
+        </div>
+
         <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="mb-6">
-                <label asp-for="Title" class="block text-gray-700 font-medium mb-2 text-center">Title:</label>
-                <input type="text" id="Title" asp-for="Title"
-                    class="form-control shadow hover:shadow-emerald-400 p-4 w-full focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent rounded-lg transition-all duration-300" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+            <div asp-validation-summary="ModelOnly"
+                class="text-red-400 mb-6 text-sm bg-red-400/10 p-4 rounded-xl border border-red-400/20"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-6">
+                    <div>
+                        <label asp-for="Title"
+                            class="block text-sm font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Book
+                            Title</label>
+                        <input asp-for="Title"
+                            class="w-full bg-slate-800/50 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                            placeholder="e.g. Brave New World" />
+                        <span asp-validation-for="Title" class="text-red-400 text-xs mt-1 ml-1"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="ImageUrl"
+                            class="block text-sm font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Cover
+                            Image URL</label>
+                        <input asp-for="ImageUrl"
+                            class="w-full bg-slate-800/50 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                            placeholder="https://..." />
+                        <span asp-validation-for="ImageUrl" class="text-red-400 text-xs mt-1 ml-1"></span>
+                    </div>
+
+                    <div>
+                        <label asp-for="GenreId"
+                            class="block text-sm font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Genre</label>
+                        <select asp-for="GenreId"
+                            class="w-full bg-slate-800/50 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all appearance-none cursor-pointer"
+                            asp-items="ViewBag.GenreId"></select>
+                    </div>
+
+                    <div>
+                        <label asp-for="AuthorId"
+                            class="block text-sm font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Author</label>
+                        <select asp-for="AuthorId"
+                            class="w-full bg-slate-800/50 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all appearance-none cursor-pointer"
+                            asp-items="ViewBag.AuthorId"></select>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <div>
+                        <label asp-for="Description"
+                            class="block text-sm font-bold text-gray-400 uppercase tracking-widest mb-2 ml-1">Description</label>
+                        <textarea asp-for="Description" rows="10"
+                            class="w-full bg-slate-800/50 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all resize-none"
+                            placeholder="What is this book about?"></textarea>
+                        <span asp-validation-for="Description" class="text-red-400 text-xs mt-1 ml-1"></span>
+                    </div>
+                </div>
             </div>
-            <div class="mb-6">
-                <label asp-for="Description"
-                    class="block text-gray-700 font-medium mb-2 text-center">Description:</label>
-                <textarea id="Description" asp-for="Description"
-                    class="form-control shadow hover:shadow-indigo-500 p-4 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent rounded-lg transition-all duration-300"></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="mb-6">
-                <label for="ImageUrl" class="block text-gray-700 font-medium mb-2 text-center">Image URL:</label>
-                <input type="url" id="ImageUrl" asp-for="ImageUrl"
-                    class="form-control shadow hover:shadow-pink-500 p-4 w-full focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent rounded-lg transition-all duration-300" />
-                <span asp-validation-for="ImageUrl" class="text-danger"></span>
-            </div>
-            <div class="mb-6">
-                <label for="GenreId" class="block text-gray-700 font-medium mb-2 text-center">Genre:</label>
-                <select asp-for="GenreId"
-                    class="form-control shadow hover:shadow-purple-500 p-4 w-full focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent rounded-lg transition-all duration-300"
-                    asp-items="ViewBag.GenreId"></select>
-            </div>
-            <div class="mb-6">
-                <label for="AuthorId" class="block text-gray-700 font-medium mb-2 text-center">Author:</label>
-                <select asp-for="AuthorId"
-                    class="form-control shadow hover:shadow-orange-500 p-4 w-full focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent rounded-lg transition-all duration-300"
-                    asp-items="ViewBag.AuthorId"></select>
-            </div>
-            <div class="flex justify-end mt-8">
-                <input type="submit" value="Create Book"
-                    class="btn btn-primary shadow-lg hover:shadow-cyan-400 p-4 w-full text-white font-bold rounded-lg bg-linear-to-r from-cyan-500 to-blue-600 border-none transform hover:scale-105 transition-all duration-300 cursor-pointer" />
+
+            <div class="pt-10 flex flex-col sm:flex-row gap-4">
+                <button type="submit"
+                    class="flex-1 px-8 py-4 bg-indigo-500 hover:bg-indigo-400 text-slate-950 font-bold rounded-2xl transition-all shadow-lg shadow-indigo-500/20 transform hover:-translate-y-1">
+                    Add to Library
+                </button>
+                <a asp-action="Index"
+                    class="px-8 py-4 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-2xl transition-all text-center no-underline!">
+                    Cancel
+                </a>
             </div>
         </form>
     </div>

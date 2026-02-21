@@ -16,10 +16,41 @@ namespace Bookss.Controllers
         }
 
         // GET: Authors
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
-            return View(await _context.Authors
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["AgeSortParm"] = sortOrder == "Age" ? "age_desc" : "Age";
+            ViewData["CurrentFilter"] = searchString;
+
+            var authors = from a in _context.Authors
+                          select a;
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                authors = authors.Where(a => a.Name.Contains(searchString)
+                                         || a.Description.Contains(searchString));
+            }
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    authors = authors.OrderByDescending(a => a.Name);
+                    break;
+                case "Age":
+                    authors = authors.OrderBy(a => a.Age);
+                    break;
+                case "age_desc":
+                    authors = authors.OrderByDescending(a => a.Age);
+                    break;
+                default:
+                    authors = authors.OrderBy(a => a.Name);
+                    break;
+            }
+
+            return View(await authors
                 .Include(a => a.Books)
+                .AsNoTracking()
                 .ToListAsync());
         }
 

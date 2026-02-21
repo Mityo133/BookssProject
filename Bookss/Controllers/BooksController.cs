@@ -18,8 +18,13 @@ namespace Bookss.Controllers
         }
 
         // GET: Books
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["TitleSortParm"] = string.IsNullOrEmpty(sortOrder) ? "title_desc" : "";
+            ViewData["AuthorSortParm"] = sortOrder == "Author" ? "author_desc" : "Author";
+            ViewData["GenreSortParm"] = sortOrder == "Genre" ? "genre_desc" : "Genre";
+
             var books = _context.Books
                 .Include(b => b.Author)
                 .Include(b => b.Genre)
@@ -32,8 +37,30 @@ namespace Bookss.Controllers
                                        || s.Genre.Name.Contains(searchString));
             }
 
+            switch (sortOrder)
+            {
+                case "title_desc":
+                    books = books.OrderByDescending(s => s.Title);
+                    break;
+                case "Author":
+                    books = books.OrderBy(s => s.Author.Name);
+                    break;
+                case "author_desc":
+                    books = books.OrderByDescending(s => s.Author.Name);
+                    break;
+                case "Genre":
+                    books = books.OrderBy(s => s.Genre.Name);
+                    break;
+                case "genre_desc":
+                    books = books.OrderByDescending(s => s.Genre.Name);
+                    break;
+                default:
+                    books = books.OrderBy(s => s.Title);
+                    break;
+            }
+
             ViewData["CurrentFilter"] = searchString;
-            return View(await books.ToListAsync());
+            return View(await books.AsNoTracking().ToListAsync());
         }
 
         // GET: Books/Create

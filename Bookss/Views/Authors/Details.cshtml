@@ -4,33 +4,51 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="bg-slate-900/40 backdrop-blur-md border border-white/5 rounded-3xl overflow-hidden shadow-2xl">
+        <div class="p-8 md:p-12">
+            <div class="flex flex-col md:flex-row gap-12 items-start">
+                <div class="shrink-0">
+                    <div class="w-48 h-48 rounded-2xl overflow-hidden bg-slate-800 border border-white/10 shadow-xl">
+                        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                        {
+                            <img src="@Model.ImageUrl" alt="@Model.Name" class="w-full h-full object-cover" />
+                        }
+                        else
+                        {
+                            <div class="flex items-center justify-center h-full bg-linear-to-br from-slate-800 to-slate-900">
+                                <span class="text-slate-600 text-6xl font-bold">@Model.Name[0]</span>
+                            </div>
+                        }
+                    </div>
+                </div>
 
-<div>
-    <h4>Author</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Age)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Age)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+                <div class="flex-1">
+                    <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight mb-2">@Model.Name</h1>
+                    <p class="text-xl text-cyan-400 font-medium mb-6">@Model.Age years old</p>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <h2 class="text-sm font-bold text-gray-500 uppercase tracking-widest mb-2">About the Author</h2>
+                            <p class="text-gray-300 leading-relaxed text-lg">@Model.Description</p>
+                        </div>
+
+                        <div class="pt-8 border-t border-white/5 flex flex-wrap gap-4">
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a asp-action="Edit" asp-route-id="@Model.Id" 
+                                   class="px-6 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-xl transition-all shadow-lg shadow-cyan-500/20 no-underline!">
+                                    Edit Profile
+                                </a>
+                            }
+                            <a asp-action="Index" 
+                               class="px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl transition-all no-underline!">
+                                Back to Authors
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
