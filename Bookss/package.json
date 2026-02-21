@@ -13,7 +13,9 @@
   "type": "commonjs",
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.18",
-    "tailwindcss": "^4.1.18"
+    "autoprefixer": "^10.4.24",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.2.0"
   },
   "dependencies": {
     "detect-libc": "^2.1.2",
