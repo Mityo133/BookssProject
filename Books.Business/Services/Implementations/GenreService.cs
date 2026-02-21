@@ -1,40 +1,85 @@
-﻿using Books.Business.Repositories;
+﻿using AutoMapper;
+using Books.Models.ViewModels.Genre;
+using Bookss.Data;
 using Bookss.Models.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using AutoMapper;
-using Bookss.Models.Entities;
-using Books.Models.ViewModels.Authors;
-using Books.Services.Interfaces;
-using Books.Business.Repositories;
+using Microsoft.EntityFrameworkCore;
 
-namespace Books.Business.Services.Implementations
-    
+public class GenreService : IGenreService
 {
-    internal class GenreService
+    private readonly ApplicationDbContext _context;
+    private readonly IMapper _mapper;
+
+    public GenreService(ApplicationDbContext context, IMapper mapper)
     {
-        private readonly IRepository<Genre> _repository;
-
-        public GenreService(IRepository<Genre> repository)
-        {
-            _repository = repository;
-        }
-
-        public async Task<IEnumerable<Genre>> GetAllAsync()
-            => await _repository.GetAllAsync();
-
-        public async Task<Genre> GetByIdAsync(int id)
-            => await _repository.GetByIdAsync(id);
-
-        public async Task CreateAsync(Genre genre)
-            => await _repository.AddAsync(genre);
-
-        public async Task UpdateAsync(Genre genre)
-            => await _repository.UpdateAsync(genre);
-
-        public async Task DeleteAsync(int id)
-            => await _repository.DeleteAsync(id);
+        _context = context;
+        _mapper = mapper;
     }
+
+    public async Task<List<GenreViewModel>> GetAllAsync()
+    {
+        var genres = await _context.Genre.ToListAsync();
+        return _mapper.Map<List<GenreViewModel>>(genres);
+    }
+
+    public async Task<GenreViewModel?> GetByIdAsync(Guid id)
+    {
+        var genre = await _context.Genre.FindAsync(id);
+        return genre == null ? null : _mapper.Map<GenreViewModel>(genre);
+    }
+
+    public async Task CreateAsync(CreateGenreViewModel model)
+    {
+        var genre = _mapper.Map<Genre>(model);
+        await _context.Genre.AddAsync(genre);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task UpdateAsync(CreateGenreViewModel model)
+    {
+        var genre = await _context.Genre.FindAsync(model.Id);
+
+        if (genre == null)
+            return;
+
+        _mapper.Map(model, genre);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DeleteAsync(Guid id)
+    {
+        var genre = await _context.Genre.FindAsync(id);
+
+        if (genre == null)
+            return;
+
+        _context.Genre.Remove(genre);
+        await _context.SaveChangesAsync();
+    }
+
+    Task<List<GenreViewModel>> IGenreService.GetAllAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    Task<GenreViewModel?> IGenreService.GetByIdAsync(Guid id)
+    {
+        throw new NotImplementedException();
+    }
+
+    Task IGenreService.CreateAsync(CreateGenreViewModel model)
+    {
+        throw new NotImplementedException();
+    }
+
+    Task IGenreService.UpdateAsync(CreateGenreViewModel model)
+    {
+        throw new NotImplementedException();
+    }
+
+    Task IGenreService.DeleteAsync(Guid id)
+    {
+        throw new NotImplementedException();
+    }
+
+    
 }

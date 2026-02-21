@@ -1,10 +1,10 @@
-﻿using Bookss.Models.Entities;
-using Bookss.Models.ViewModels.Genre;
+﻿using Books.Models.ViewModels.Genre;
 public interface IGenreService
 {
-    Task<IEnumerable<GenreViewModel>> GetAllAsync();
-    Task<GenreViewModel> GetByIdAsync(Guid id);
-    Task CreateAsync(GenreCreateViewModel model);
-    Task UpdateAsync(GenreEditViewModel model);
+    Task<List<GenreViewModel>> GetAllAsync();
+    Task<GenreViewModel?> GetByIdAsync(Guid id);
+    Task CreateAsync(CreateGenreViewModel model);
+    Task UpdateAsync(CreateGenreViewModel model);
     Task DeleteAsync(Guid id);
+    
 }

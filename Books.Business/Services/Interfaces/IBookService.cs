@@ -5,16 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Books.Models.ViewModels.Book;
-using Books.Services.Interfaces;
+using Books.Services.Interfaces;    
 namespace Books.Business.Services.Interfaces
 {
-    internal class IBookService
+    public interface IBookService
     {
-        Task<IEnumerable<Book>> AllAsync { get; }
-
-        Task<Book?> GetByIdAsync(int id);
-        Task CreateAsync(Book book);
-        Task UpdateAsync(Book book);
-        Task DeleteAsync(int id);
+        Task<List<BookViewModel>> GetAllAsync();
+        Task<BookViewModel?> GetByIdAsync(Guid id);
+        Task CreateAsync(BookCreateOrEditViewModel model);
+        Task UpdateAsync(BookCreateOrEditViewModel model);
+        Task DeleteAsync(Guid id);
     }
 }
