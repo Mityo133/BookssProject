@@ -65,7 +65,7 @@ namespace Bookss.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,Age")] Author author)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,ImageUrl,Age")] Author author)
         {
             if (ModelState.IsValid)
             {
@@ -97,7 +97,7 @@ namespace Bookss.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Age")] Author author)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,ImageUrl,Age")] Author author)
         {
             if (id != author.Id)
             {
