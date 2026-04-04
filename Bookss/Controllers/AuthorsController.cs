@@ -1,163 +1,88 @@
-﻿using Bookss.Data;
-using Bookss.Models;
+﻿using Bookss.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization;
 
-namespace Bookss.Controllers
+public class AuthorsController : Controller
 {
-    public class AuthorsController : Controller
+    private readonly IAuthorsService _authorsService;
+
+    public AuthorsController(IAuthorsService authorsService)
     {
-        private readonly ApplicationDbContext _context;
+        _authorsService = authorsService;
+    }
 
-        public AuthorsController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+    // GET: Authors
+    public async Task<IActionResult> Index()
+    {
+        var authors = await _authorsService.GetAllAsync();
+        return View(authors);
+    }
 
-        // GET: Authors
-        public async Task<IActionResult> Index(string sortOrder, string searchString)
-        {
-            ViewData["CurrentSort"] = sortOrder;
-            ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewData["AgeSortParm"] = sortOrder == "Age" ? "age_desc" : "Age";
-            ViewData["CurrentFilter"] = searchString;
+    // GET: Authors/Details/5
+    public async Task<IActionResult> Details(int id)
+    {
+        var author = await _authorsService.GetByIdAsync(id);
+        if (author == null) return NotFound();
 
-            var authors = from a in _context.Authors
-                          select a;
+        return View(author);
+    }
 
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                authors = authors.Where(a => a.Name.Contains(searchString)
-                                         || a.Description.Contains(searchString));
-            }
+    // GET: Authors/Create
+    public IActionResult Create()
+    {
+        return View();
+    }
 
-            switch (sortOrder)
-            {
-                case "name_desc":
-                    authors = authors.OrderByDescending(a => a.Name);
-                    break;
-                case "Age":
-                    authors = authors.OrderBy(a => a.Age);
-                    break;
-                case "age_desc":
-                    authors = authors.OrderByDescending(a => a.Age);
-                    break;
-                default:
-                    authors = authors.OrderBy(a => a.Name);
-                    break;
-            }
-
-            return View(await authors
-                .Include(a => a.Books)
-                .AsNoTracking()
-                .ToListAsync());
-        }
-
-        // GET: Authors/Create
-        [Authorize(Roles = "Admin")]
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Authors/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,ImageUrl,Age")] Author author)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Authors.Add(author);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
+    // POST: Authors/Create
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(Author author)
+    {
+        if (!ModelState.IsValid)
             return View(author);
-        }
 
-        // GET: Authors/Edit/5
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        await _authorsService.CreateAsync(author);
+        return RedirectToAction(nameof(Index));
+    }
 
-            var author = await _context.Authors.FindAsync(id);
-            if (author == null)
-            {
-                return NotFound();
-            }
+    // GET: Authors/Edit/5
+    public async Task<IActionResult> Edit(int id)
+    {
+        var author = await _authorsService.GetByIdAsync(id);
+        if (author == null) return NotFound();
+
+        return View(author);
+    }
+
+    // POST: Authors/Edit/5
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, Author author)
+    {
+        if (id != author.Id)
+            return BadRequest();
+
+        if (!ModelState.IsValid)
             return View(author);
-        }
 
-        // POST: Authors/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,ImageUrl,Age")] Author author)
-        {
-            if (id != author.Id)
-            {
-                return NotFound();
-            }
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(author);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AuthorExists(author.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(author);
-        }
+        await _authorsService.UpdateAsync(author);
+        return RedirectToAction(nameof(Index));
+    }
 
-        // GET: Authors/Delete/5
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+    // GET: Authors/Delete/5
+    public async Task<IActionResult> Delete(int id)
+    {
+        var author = await _authorsService.GetByIdAsync(id);
+        if (author == null) return NotFound();
 
-            var author = await _context.Authors.FindAsync(id);
-            if (author == null)
-            {
-                return NotFound();
-            }
-            return View(author);
-        }
+        return View(author);
+    }
 
-        // POST: Authors/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var author = await _context.Authors.FindAsync(id);
-            _context.Authors.Remove(author);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool AuthorExists(int id)
-        {
-            return _context.Authors.Any(e => e.Id == id);
-        }
+    // POST: Authors/Delete/5
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        await _authorsService.DeleteAsync(id);
+        return RedirectToAction(nameof(Index));
     }
 }

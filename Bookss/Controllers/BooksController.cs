@@ -1,185 +1,120 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using System.Threading.Tasks;
-using Bookss.Data;
-using Bookss.Models;
+﻿using Bookss.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 
-namespace Bookss.Controllers
+public class BooksController : Controller
 {
-    public class BooksController : Controller
+    private readonly IBookService _bookService;
+    private readonly IAuthorsService _authorsService;
+    private readonly IGenreService _genresService;
+
+    public BooksController(
+        IBookService bookService,
+        IAuthorsService authorsService,
+        IGenreService genresService)
     {
-        private readonly ApplicationDbContext _context;
+        _bookService = bookService;
+        _authorsService = authorsService;
+        _genresService = genresService;
+    }
 
-        public BooksController(ApplicationDbContext context)
+    // ✅ GET: Books
+    public async Task<IActionResult> Index()
+    {
+        var books = await _bookService.GetAllAsync();
+        return View(books);
+    }
+
+    // ✅ GET: Books/Details/5
+    public async Task<IActionResult> Details(int id)
+    {
+        var book = await _bookService.GetByIdAsync(id);
+
+        if (book == null)
+            return NotFound();
+
+        return View(book);
+    }
+
+    // ✅ GET: Books/Create
+    public async Task<IActionResult> Create()
+    {
+        await LoadDropdowns();
+        return View();
+    }
+
+    // ✅ POST: Books/Create
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(Book book)
+    {
+        if (!ModelState.IsValid)
         {
-            _context = context;
-        }
-
-        // GET: Books
-        public async Task<IActionResult> Index(string sortOrder, string searchString)
-        {
-            ViewData["CurrentSort"] = sortOrder;
-            ViewData["TitleSortParm"] = string.IsNullOrEmpty(sortOrder) ? "title_desc" : "";
-            ViewData["AuthorSortParm"] = sortOrder == "Author" ? "author_desc" : "Author";
-            ViewData["GenreSortParm"] = sortOrder == "Genre" ? "genre_desc" : "Genre";
-
-            var books = _context.Books
-                .Include(b => b.Author)
-                .Include(b => b.Genre)
-                .AsQueryable();
-
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                books = books.Where(s => s.Title.Contains(searchString)
-                                       || s.Author.Name.Contains(searchString)
-                                       || s.Genre.Name.Contains(searchString));
-            }
-
-            switch (sortOrder)
-            {
-                case "title_desc":
-                    books = books.OrderByDescending(s => s.Title);
-                    break;
-                case "Author":
-                    books = books.OrderBy(s => s.Author.Name);
-                    break;
-                case "author_desc":
-                    books = books.OrderByDescending(s => s.Author.Name);
-                    break;
-                case "Genre":
-                    books = books.OrderBy(s => s.Genre.Name);
-                    break;
-                case "genre_desc":
-                    books = books.OrderByDescending(s => s.Genre.Name);
-                    break;
-                default:
-                    books = books.OrderBy(s => s.Title);
-                    break;
-            }
-
-            ViewData["CurrentFilter"] = searchString;
-            return View(await books.AsNoTracking().ToListAsync());
-        }
-
-        // GET: Books/Create
-        [Authorize(Roles = "Admin")]
-        public IActionResult Create()
-        {
-            LoadDropdowns();
-            return View();
-        }
-
-        // POST: Books/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,GenreId,AuthorId,ImageUrl")] Book book)
-        {
-            ModelState.Remove("Author");
-            ModelState.Remove("Genre");
-            if (ModelState.IsValid)
-            {
-                _context.Add(book);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-
-            LoadDropdowns();
+            await LoadDropdowns();
             return View(book);
         }
 
-        // GET: Books/Edit/5
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int? id)
+        await _bookService.CreateAsync(book);
+        return RedirectToAction(nameof(Index));
+    }
+
+    // ✅ GET: Books/Edit/5
+    public async Task<IActionResult> Edit(int id)
+    {
+        var book = await _bookService.GetByIdAsync(id);
+
+        if (book == null)
+            return NotFound();
+
+        await LoadDropdowns();
+        return View(book);
+    }
+
+    // ✅ POST: Books/Edit/5
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, Book book)
+    {
+        if (id != book.Id)
+            return BadRequest();
+
+        if (!ModelState.IsValid)
         {
-            if (id == null)
-                return NotFound();
-
-            var book = await _context.Books.FindAsync(id);
-
-            if (book == null)
-                return NotFound();
-
-            LoadDropdowns();
+            await LoadDropdowns();
             return View(book);
         }
 
-        // POST: Books/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,GenreId,AuthorId,ImageUrl")] Book book)
-        {
-            if (id != book.Id)
-                return NotFound();
+        await _bookService.UpdateAsync(book);
+        return RedirectToAction(nameof(Index));
+    }
 
-            ModelState.Remove("Author");
-            ModelState.Remove("Genre");
-            if (ModelState.IsValid)
-            {
-                _context.Update(book);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
+    // ✅ GET: Books/Delete/5
+    public async Task<IActionResult> Delete(int id)
+    {
+        var book = await _bookService.GetByIdAsync(id);
 
-            LoadDropdowns();
-            return View(book);
-        }
-        [HttpGet]
+        if (book == null)
+            return NotFound();
 
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-                return NotFound();
+        return View(book);
+    }
 
-            var book = await _context.Books
-                .Include(b => b.Author)
-                .Include(b => b.Genre)
-                .Include(b => b.BooksRating)
-                    .ThenInclude(r => r.User)
-                .FirstOrDefaultAsync(b => b.Id == id);
+    // ✅ POST: Books/Delete/5
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        await _bookService.DeleteAsync(id);
+        return RedirectToAction(nameof(Index));
+    }
 
-            if (book == null)
-                return NotFound();
+    // 🔧 Helper method (VERY IMPORTANT)
+    private async Task LoadDropdowns()
+    {
+        var authors = await _authorsService.GetAllAsync();
+        var genres = await _genresService.GetAllAsync();
 
-            return View(book);
-        }
-        // GET: Books/Delete/5
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-                return NotFound();
-
-            var book = await _context.Books
-                .Include(b => b.Author)
-                .Include(b => b.Genre)
-                .FirstOrDefaultAsync(m => m.Id == id);
-
-            if (book == null)
-                return NotFound();
-
-            return View(book);
-        }
-
-        // POST: Books/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var book = await _context.Books.FindAsync(id);
-            _context.Books.Remove(book);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private void LoadDropdowns()
-        {
-            ViewBag.AuthorId = new SelectList(_context.Authors, "Id", "Name");
-            ViewBag.GenreId = new SelectList(_context.Genre, "Id", "Name");
-        }
-
+        ViewBag.AuthorId = new SelectList(authors, "Id", "Name");
+        ViewBag.GenreId = new SelectList(genres, "Id", "Name");
     }
 }
