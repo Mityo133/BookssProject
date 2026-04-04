@@ -20,7 +20,7 @@
 
 
   <Target Name="BuildCSS" BeforeTargets="Build">
-    <Exec Command="npm run build:css" />
+	  
   </Target>
 
 </Project>
