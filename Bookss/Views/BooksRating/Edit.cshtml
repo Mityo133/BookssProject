@@ -1,42 +1,55 @@
-﻿@model Bookss.Models.BooksRating
+@model Bookss.Models.BooksRating
 
 @{
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<div class="flex flex-col items-center justify-center py-10">
+    <div class="w-full max-w-md bg-white/10 dark:bg-slate-800/80 backdrop-blur-md border border-white/20 dark:border-slate-700 rounded-3xl p-8 shadow-2xl transition-all hover:shadow-[0_0_30px_rgba(168,85,247,0.15)]">
+        
+        <div class="mb-8 text-center">
+            <h1 class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 mb-2">
+                Edit Rating
+            </h1>
+            <p class="text-sm text-slate-500 dark:text-slate-400">Update your thoughts on this book</p>
+        </div>
 
-<h4>BooksRating</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form asp-action="Edit" asp-controller="BooksRating" method="post" class="space-y-6">
+            <div asp-validation-summary="ModelOnly" class="text-red-500 text-sm font-medium p-3 rounded-lg bg-red-500/10 border border-red-500/20 hidden"></div>
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="BookId" class="control-label"></label>
-                <select asp-for="BookId" class="form-control" asp-items="ViewBag.BookId"></select>
-                <span asp-validation-for="BookId" class="text-danger"></span>
+            
+            <div class="space-y-5">
+                <div class="group">
+                    <label asp-for="BookId" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 transition-colors group-focus-within:text-purple-500"></label>
+                    <select asp-for="BookId" class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 appearance-none" asp-items="ViewBag.BookId"></select>
+                    <span asp-validation-for="BookId" class="text-red-500 text-xs mt-1 block"></span>
+                </div>
+                
+                <div class="group">
+                    <label asp-for="Rating" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 transition-colors group-focus-within:text-purple-500"></label>
+                    <input asp-for="Rating" type="number" step="0.5" min="1" max="5" class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300" placeholder="e.g. 5" />
+                    <span asp-validation-for="Rating" class="text-red-500 text-xs mt-1 block"></span>
+                </div>
+                
+                <div class="group">
+                    <label asp-for="Text" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 transition-colors group-focus-within:text-purple-500">Review</label>
+                    <textarea asp-for="Text" rows="4" class="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 resize-none" placeholder="Write your review here..."></textarea>
+                    <span asp-validation-for="Text" class="text-red-500 text-xs mt-1 block"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Rating" class="control-label"></label>
-                <input asp-for="Rating" class="form-control" />
-                <span asp-validation-for="Rating" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Text" class="control-label"></label>
-                <input asp-for="Text" class="form-control" />
-                <span asp-validation-for="Text" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+
+            <div class="pt-4 flex items-center justify-between">
+                <a asp-action="Index" class="inline-flex items-center text-sm font-medium text-slate-500 hover:text-purple-600 dark:text-slate-400 dark:hover:text-purple-400 transition-colors">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    Back
+                </a>
+                <button type="submit" class="relative inline-flex items-center justify-center px-8 py-3 overflow-hidden font-medium text-white bg-purple-600 rounded-xl group hover:bg-purple-700 focus:ring-2 focus:ring-purple-500 focus:outline-none transition-all duration-300 shadow-[0_0_15px_rgba(147,51,234,0.3)] hover:shadow-[0_0_25px_rgba(147,51,234,0.5)] transform hover:-translate-y-0.5">
+                    <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full group-hover:w-56 group-hover:h-56 opacity-10"></span>
+                    <span class="relative">Save Changes</span>
+                </button>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
