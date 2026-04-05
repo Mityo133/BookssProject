@@ -12,14 +12,20 @@ public class BooksRatingController : Controller
    
     [HttpGet]
    [HttpGet]
+[HttpGet]
 public async Task<IActionResult> Create(int bookId)
 {
-    var book = await _ratingService.Books.FindAsync(bookId);
+    var book = await _bookService.GetByIdAsync(bookId);
 
     if (book == null)
         return NotFound();
 
-    return View(book); // pass the book to the view
+    var model = new BooksRating
+    {
+        BookId = book.Id
+    };
+
+    return View(model);
 }
     // POST: Rate book
     [HttpPost]
