@@ -9,10 +9,20 @@ public class BooksRatingController : Controller
     {
         _ratingService = ratingService;
     }
+   
+    [HttpGet]
+   [HttpGet]
+public async Task<IActionResult> Create(int bookId)
+{
+    var book = await _ratingService.Books.FindAsync(bookId);
 
+    if (book == null)
+        return NotFound();
+
+    return View(book); // pass the book to the view
+}
     // POST: Rate book
     [HttpPost]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(int bookId, int rating)
     {
         if (rating < 1 || rating > 5)
