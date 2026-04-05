@@ -4,44 +4,44 @@ using Microsoft.AspNetCore.Mvc;
 public class BooksRatingController : Controller
 {
     private readonly IBooksRatingService _ratingService;
+    private readonly IBookService _bookService;
 
-    public BooksRatingController(IBooksRatingService ratingService)
+    public BooksRatingController(IBooksRatingService ratingService, IBookService bookService)
     {
         _ratingService = ratingService;
+        _bookService = bookService;
     }
-   
+
+    // GET: Create rating form
     [HttpGet]
-   [HttpGet]
-[HttpGet]
-public async Task<IActionResult> Create(int bookId)
-{
-    var book = await _bookService.GetByIdAsync(bookId);
-
-    if (book == null)
-        return NotFound();
-
-    var model = new BooksRating
+    public async Task<IActionResult> Create(int bookId)
     {
-        BookId = book.Id
-    };
+        var book = await _bookService.GetByIdAsync(bookId);
 
-    return View(model);
-}
-    // POST: Rate book
-    [HttpPost]
-    public async Task<IActionResult> Create(int bookId, int rating)
-    {
-        if (rating < 1 || rating > 5)
-            return BadRequest();
+        if (book == null)
+            return NotFound();
 
-        var ratingModel = new BooksRating
+        var model = new BooksRating
         {
-            BookId = bookId,
-            Rating = rating
+            BookId = book.Id,
+            Text = ""
         };
 
-        await _ratingService.AddRatingAsync(ratingModel);
+        // Optional: pass title to View
+        ViewBag.BookTitle = book.Title;
 
-        return RedirectToAction("Details", "Books", new { id = bookId });
+        return View(model);
+    }
+
+    // POST: Rate book
+    [HttpPost]
+    public async Task<IActionResult> Create(BooksRating model)
+    {
+        if (model.Rating < 1 || model.Rating > 5)
+            return BadRequest();
+
+        await _ratingService.AddRatingAsync(model);
+
+        return RedirectToAction("Details", "Books", new { id = model.BookId });
     }
 }
